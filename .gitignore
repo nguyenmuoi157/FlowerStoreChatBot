@@ -25,4 +25,5 @@ yarn-error.log*
 
 node_modules/
 *.DS_Store
-server/node_modules/
+server/node_modules
+serverexpress/node_modules
