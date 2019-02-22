@@ -16,6 +16,7 @@
     "lodash": "^4.17.11",
     "mongoose": "^5.4.14",
     "mongoose-paginate-v2": "^1.0.21",
+    "mongoose-timestamp": "^0.6.0",
     "morgan": "~1.9.0"
   },
   "devDependencies": {
