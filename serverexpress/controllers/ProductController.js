@@ -8,8 +8,13 @@ const route = express.Router();
 route.get('/:id', async function (req, res) {
     try {
         let data = await ProductModel.findById(req.params.id).exec();
-        res.json(data)
-
+        if (data) {
+            res.json(data)
+        } else {
+            res.json({
+                mess: 'san pham khong ton tai'
+            })
+        }
     } catch (error) {
         console.log(error)
     }
@@ -48,19 +53,63 @@ route.post('/create', async function (req, res) {
     });
 })
 
-route.put('/update/:id', function (req, res) {
-    console.log(req.body)
+route.put('/update/:id', async function (req, res) {
     let data = req.body;
     let productId = req.params.id;
-    let product = new ProductModel();
+    try {
+        let product = await ProductModel.findById(productId).exec();
+        if (product) {
+            ProductModel.updateOne({ _id: productId }, data, function (err, raw) {
+                if (err) {
+                    res.json({
+                        mess: 'err',
+                        err
+                    });
+                } else {
 
-    product.update({ _id: productId }, data, function (err, raw) {
-        if (err) {
-            res.send(err);
+                    res.json({
+                        mess: 'succses',
+                        raw
+                    })
+                }
+            });
         } else {
-            res.json(raw)
+            res.json({
+                mess: 'product not found'
+            })
         }
-    });
+    } catch (err) {
+        res.json({
+            mess: 'error',
+            err
+        })
+    }
+
+
+})
+
+route.delete("/delete/:id", async function (req, res) {
+    let productid = req.params.id;
+    console.log(productid)
+    try {
+        let product = await ProductModel.findById(productid).exec();
+        if (product) {
+            let result = await ProductModel.deleteOne({ _id: productid }).exec()
+            console.log(result);
+            res.json({
+                mess: 'xoa thanh cong',
+                result
+            })
+        } else {
+            res.json({
+                err: 'san pham khong ton tai'
+            })
+        }
+
+    } catch (error) {
+        res.send(error)
+    }
+
 })
 
 module.exports = route;
